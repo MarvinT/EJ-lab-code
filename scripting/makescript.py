@@ -21,7 +21,7 @@ elif transfer_set == 2:
 	movie_spec_test2 = "snle/acquisition/movie-xml/RGB-10-8-0.48-22222.xml"
 elif transfer_set == 3:
 	templates = '1, 12, 13'
-	movie_specs = ["/snle/acquisition/movie-xml/RGB-10-8-0.48-11111.xml", "/snle/acquisition/movie-xml/RGB-10-8-0.48-11111.xml", "snle/acquisition/movie-xml/RGB-10-8-0.48-22222.xml"
+	movie_specs = ["/snle/acquisition/movie-xml/RGB-10-8-0.48-11111.xml", "/snle/acquisition/movie-xml/RGB-10-8-0.48-11111.xml", "snle/acquisition/movie-xml/RGB-10-8-0.48-22222.xml"]
 	mapped = '2-12, 14'
 	date = "2007-08-24-4"
 	
