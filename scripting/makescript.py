@@ -5,23 +5,28 @@ import re
 
 filename = "scripts.sh"
 
-transfer_set = 3
+transfer_set = 4
 
 if transfer_set == 1:
+	date = "2007-03-27-1"
 	templates = '11, 20'
 	movie_specs = ['RGB-8-8-0.48-22222', 'RGB-8-8-0.48-33333']
 	mapped = '12-19'
-	date = "2007-03-27-1"
 elif transfer_set == 2:
+	date = "2007-08-24-4"
 	templates = '0, 1, 12, 13'
 	movie_specs = ["RGB-10-8-0.48-11111", "RGB-10-8-0.48-11111", "RGB-10-8-0.48-11111", "RGB-10-8-0.48-22222"]
 	mapped = '2-11, 14'
-	date = "2007-08-24-4"
 elif transfer_set == 3:
+	date = '2008-04-08-0'
 	templates = '2, 14'
 	movie_specs = ["RGB-10-8-0.48-11111", "RGB-10-8-0.48-11111"]
 	mapped = '3-13'
-	date = '2008-04-08-0'
+elif transfer_set == 4:
+	date = '2008-04-22-6'
+	templates = '0-2, 11'
+	movie_specs = ["RGB-10-16-0.48-11111", "RGB-1-48-0.48-11111", "RGB-10-16-0.48-11111", "BW-10-16-0.48-11111"]
+	mapped = '3-10, 12-14'
 	
 remote_dir = "/rush/snlearchive/data/" + date + "/data%03d/*.bin"
 local_data_dir = "/Data/" + date + "/data%03d"

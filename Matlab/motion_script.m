@@ -1,16 +1,23 @@
+% This script calculates the motion signals for a data run displays several
+% nice guis for visualization.
+% Marvin Thielk 2013
+% mthielk@salk.edu
+
+
+% vary the options set in run_opt to turn different behavior on and off
 run_opt.load = true; % T/F
-run_opt.data_run = 18; % 12-19
-run_opt.cell_type = 'Off midget'; % on/off parasol, on/off midget
+run_opt.data_run = 17; % 12-19
+run_opt.cell_type = 'Off parasol'; % on/off parasol, on/off midget
 run_opt.trial_num = 2; % 1-4
 run_opt.raster = false; % T/F
 run_opt.trial_raster = false; % T/F
 run_opt.trial_raster_shift = false; % T/F
-run_opt.manual_speed_tuning = true; % T/F
+run_opt.manual_speed_tuning = false; % T/F
 run_opt.velocity_lim = 150; % >0
-run_opt.auto_speed_tuning = true; % T/F
+run_opt.auto_speed_tuning = false; % T/F
 run_opt.tau = .01; % tuning parameter
 run_opt.pop_speed_tuning = true; % T/F
-run_opt.savefig = true % T/F
+run_opt.savefig = true; % T/F
 
 if run_opt.load %load data
 
@@ -34,7 +41,9 @@ if run_opt.load %load data
     datarun{2}=load_stim(datarun{2},'correction_incomplet_run', 0); 
 end
 
-if run_opt.raster || run_opt.trial_raster || run_opt.trial_raster_shift || run_opt.speed_tuning
+if run_opt.raster || run_opt.trial_raster || ...
+        run_opt.trial_raster_shift || run_opt.manual_speed_tuning || ...
+        run_opt.auto_speed_tuning || run_opt.pop_speed_tuning
     clf; set(gcf, 'color', 'white');
     
     cell_indices1=get_cell_indices(datarun{1},{run_opt.cell_type});
@@ -229,7 +238,7 @@ if run_opt.pop_speed_tuning
         ylabel('net rightward motion signal')
         title(sprintf('motion signal strength  in trial number %d', k))
         if run_opt.savefig
-            saveas(gcf, sprintf('figs/%s data run %d trial %d.png', run_opt.cell_type, run_opt.data_run, run_opt.trial_num))
+            saveas(gcf, sprintf('figs/%s_data_run_%d_trial_%d.png', run_opt.cell_type, run_opt.data_run, run_opt.trial_num))
         end
         uiwait;
     end

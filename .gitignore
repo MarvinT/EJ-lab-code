@@ -1,3 +1,5 @@
 *.m~
 *.py~
 scripts.sh
+Matlab/figs/*
+Matlab/.DS_Store
