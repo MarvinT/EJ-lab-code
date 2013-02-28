@@ -1,4 +1,5 @@
-function [str, flt_rsp1, flt_rsp2, flt_rsp1_shifted, flt_rsp2_shifted, spks_1_shifted, spks_2_shifted] = motion_signal(velocity, spks_1, spks_2, dx, trigger, trial_length, tau)
+function [str, flt_rsp1, flt_rsp2, flt_rsp1_shifted, flt_rsp2_shifted, spks_1_shifted, spks_2_shifted] ...
+    = motion_signal(velocity, spks_1, spks_2, dx, trigger, trial_length, tau)
 if abs(dx / velocity) > trial_length / 2
     str = 0;
     flt_rsp1 = @(t) 0;
