@@ -207,14 +207,7 @@ end
 
 if run_opt.pop_speed_tuning
     k=1; kmin=1; kmax=length(tr); hk=loop_slider_n(k,kmin,kmax,1);
-    pairs = zeros(2, length(cell_indices2) * (length(cell_indices2) - 1) / 2);
-    counter = 1;
-    for i = 2:length(cell_indices2)
-        for j = 1:i-1
-            pairs(:,counter) = [i; j];
-            counter = counter + 1;
-        end
-    end
+    
     v = linspace(1, run_opt.velocity_lim, 50);
     while true
         if ~ishandle(hk)
@@ -224,12 +217,8 @@ if run_opt.pop_speed_tuning
         
         sig_str = zeros(size(v));
         for i = 1:length(v)
-            for j = 1:length(pairs)
-                spks_1 = datarun{2}.spikes{cell_indices2(pairs(1,j))};
-                spks_2 = datarun{2}.spikes{cell_indices2(pairs(2,j))};
-                dx = cell_x_pos(cell_indices1(pairs(2,j))) - cell_x_pos(cell_indices1(pairs(1,j)));
-                sig_str(i) = sig_str(i) + motion_signal(v(i), spks_1, spks_2, dx, tr(k), stop, run_opt.tau);
-            end
+            sig_str(i) = pop_motion_signal(v(i), datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(k), stop, run_opt.tau);
+            
             fprintf('*')
         end
         fprintf('\n')
