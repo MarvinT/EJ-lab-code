@@ -5,7 +5,7 @@ import re
 
 filename = "scripts.sh"
 
-transfer_set = 4
+transfer_set = 5
 
 if transfer_set == 1:
 	date = "2007-03-27-1"
@@ -27,6 +27,11 @@ elif transfer_set == 4:
 	templates = '0-2, 11'
 	movie_specs = ["RGB-10-16-0.48-11111", "RGB-1-48-0.48-11111", "RGB-10-16-0.48-11111", "BW-10-16-0.48-11111"]
 	mapped = '3-10, 12-14'
+elif transfer_set == 5:
+	date = '2003-08-06-0'
+	templates = '16'
+	movie_specs = ["RGB-8-8-0.48-22222"]
+	mapped = '3-15'
 	
 remote_dir = "/rush/snlearchive/data/" + date + "/data%03d/*.bin"
 local_data_dir = "/Data/" + date + "/data%03d"
@@ -76,6 +81,8 @@ class interpret_range:
 def mapped_template(mapped_num, templates):
 	val = -1
 	for template in interpret_range(templates):
+		if val == -1:
+			val = template
 		if template < mapped_num and template > val:
 			val = template
 	return val

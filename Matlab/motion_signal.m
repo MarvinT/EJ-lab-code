@@ -17,13 +17,13 @@ spks_1 = spks_1(spks_1 >= 0 & spks_1 <= trial_length);
 spks_2 = spks_2(spks_2 >= 0 & spks_2 <= trial_length);
 % circularly shift spikes by dt
 spks_1_shifted = spks_1 - dx / velocity;
-spks_1_shifted = mod(spks_1_shifted, trial_length);
+spks_1_shifted = sort(mod(spks_1_shifted, trial_length));
 spks_2_shifted = spks_2 - dx / velocity;
-spks_2_shifted = mod(spks_2_shifted, trial_length);
+spks_2_shifted = sort(mod(spks_2_shifted, trial_length));
 % replicate spikes before and after trial to minimize artifacts of spikes
 % shifting circularly across the border
-spks_1_shifted = [spks_1_shifted - trial_length; spks_1_shifted; spks_1_shifted + trial_length];
-spks_2_shifted = [spks_2_shifted - trial_length; spks_2_shifted; spks_2_shifted + trial_length];
+spks_1_shifted = [spks_1_shifted(ceil(end/2):end) - trial_length; spks_1_shifted; spks_1_shifted(1:floor(end/2)) + trial_length];
+spks_2_shifted = [spks_2_shifted(ceil(end/2):end) - trial_length; spks_2_shifted; spks_2_shifted(1:floor(end/2)) + trial_length];
 % filter responses
 flt_rsp1 = filtered_response(spks_1, tau);
 flt_rsp2 = filtered_response(spks_2, tau);
@@ -31,5 +31,5 @@ flt_rsp1_shifted = filtered_response(spks_1_shifted, tau);
 flt_rsp2_shifted = filtered_response(spks_2_shifted, tau);
 % and return the integral
 str = integral(@(t) flt_rsp1(t) .* flt_rsp2_shifted(t) - flt_rsp2(t) .* flt_rsp1_shifted(t), 0, trial_length, ...
-    'AbsTol', 1e-3, 'RelTol', 1e-4);
+    'AbsTol', 1e-1, 'RelTol', 1e-2);
 end

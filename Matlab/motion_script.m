@@ -8,16 +8,17 @@
 run_opt.load = true; % T/F
 run_opt.data_run = 17; % 12-19
 run_opt.cell_type = 'Off parasol'; % on/off parasol, on/off midget
-run_opt.trial_num = 2; % 1-4
+run_opt.config_num = 2; % 1-4
 run_opt.raster = false; % T/F
 run_opt.trial_raster = false; % T/F
 run_opt.trial_raster_shift = false; % T/F
 run_opt.manual_speed_tuning = false; % T/F
-run_opt.velocity_lim = 150; % >0
+run_opt.velocity_lim = 50; % >0
 run_opt.auto_speed_tuning = false; % T/F
 run_opt.tau = .01; % tuning parameter
 run_opt.pop_speed_tuning = true; % T/F
 run_opt.savefig = true; % T/F
+run_opt.trial_num = 1; % > 0
 
 if run_opt.load %load data
 
@@ -59,7 +60,7 @@ if run_opt.raster || run_opt.trial_raster || ...
     stop = mean(datarun{2}.triggers(2:2:end) - datarun{2}.triggers(1:2:end));
 
     tr=datarun{2}.triggers(1:2:end); % triggers mark the beginning and end
-    t=find(datarun{2}.stimulus.trial_list==run_opt.trial_num);
+    t=find(datarun{2}.stimulus.trial_list==run_opt.config_num);
     tr=tr(t);
 end
 
@@ -206,29 +207,21 @@ if run_opt.auto_speed_tuning
 end
 
 if run_opt.pop_speed_tuning
-    k=1; kmin=1; kmax=length(tr); hk=loop_slider_n(k,kmin,kmax,1);
     
     v = linspace(1, run_opt.velocity_lim, 50);
-    while true
-        if ~ishandle(hk)
-            break
-        end
-        k = round(get(hk, 'Value'));
+    
+    sig_str = zeros(size(v));
+    for i = 1:length(v)
+        sig_str(i) = pop_motion_signal(v(i), datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(run_opt.trial_num), stop, run_opt.tau);
         
-        sig_str = zeros(size(v));
-        for i = 1:length(v)
-            sig_str(i) = pop_motion_signal(v(i), datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(k), stop, run_opt.tau);
-            
-            fprintf('*')
-        end
-        fprintf('\n')
-        plot(v, sig_str)
-        xlabel('velocity')
-        ylabel('net rightward motion signal')
-        title(sprintf('motion signal strength  in trial number %d', k))
-        if run_opt.savefig
-            saveas(gcf, sprintf('figs/%s_data_run_%d_trial_%d.png', run_opt.cell_type, run_opt.data_run, run_opt.trial_num))
-        end
-        uiwait;
+        fprintf('*')
+    end
+    fprintf('\n')
+    plot(v, sig_str)
+    xlabel('velocity')
+    ylabel('net rightward motion signal')
+    title(sprintf('motion signal strength  in trial number %d', run_opt.trial_num))
+    if run_opt.savefig
+        saveas(gcf, sprintf('figs/%s_data_run_%d_config_%d_trial_%d.png', run_opt.cell_type, run_opt.data_run, run_opt.config_num, run_opt.trial_num))
     end
 end
