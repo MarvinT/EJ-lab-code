@@ -6,8 +6,9 @@
 
 % vary the options set in run_opt to turn different behavior on and off
 run_opt.load = true; % T/F
+run_opt.remote = true; % T/F
 run_opt.data_run = 17; % 12-19
-run_opt.cell_type = 'Off parasol'; % on/off parasol, on/off midget
+run_opt.cell_type = 'On midget'; % on/off parasol, on/off midget
 run_opt.config_num = 2; % 1-4
 run_opt.raster = false; % T/F
 run_opt.trial_raster = false; % T/F
@@ -16,18 +17,21 @@ run_opt.manual_speed_tuning = false; % T/F
 run_opt.velocity_lim = 50; % >0
 run_opt.auto_speed_tuning = false; % T/F
 run_opt.tau = .01; % tuning parameter
-run_opt.pop_speed_tuning = true; % T/F
+run_opt.pop_speed_tuning = false; % T/F
 run_opt.savefig = true; % T/F
 run_opt.trial_num = 1; % > 0
+run_opt.trial_estimate = true; % T/F
+run_opt.trial_estimate_start = 14.6;
+
 
 if run_opt.load %load data
 
     clear datarun 
 
-    if 0 
-        datarun{1}.names.rrs_params_path='/braid/snle/analysis-archive/Experiments/Array/Analysis/2007-03-27-1/data011-mg/data011/data011.params';
-        datarun{2}.names.rrs_neurons_path='/braid/snle/analysis-archive/Experiments/Array/Analysis/2007-03-27-1/data017/data017-from-data011/data017-map.neurons';
-        datarun{2}.names.stimulus_path='/braid/snle/analysis-archive/Experiments/Array/Analysis/2007-03-27-1/stimuli/s17';
+    if run_opt.remote 
+        datarun{1}.names.rrs_params_path='/snle/analysis/2007-03-27-1/data011-nwpca/data011-nwpca.params';
+        datarun{2}.names.rrs_neurons_path=sprintf('/snle/analysis/2007-03-27-1/data%03d-from-data011-nwpca/data%03d-from-data011-nwpca.neurons', run_opt.data_run, run_opt.data_run);
+        datarun{2}.names.stimulus_path=sprintf('/braid/snle/analysis-archive/Experiments/Array/Analysis/2007-03-27-1/stimuli/s%d', run_opt.data_run);
     else
         datarun{1}.names.rrs_params_path='/Data/2007-03-27-1/data011-nwpca/data011-nwpca.params';
         datarun{2}.names.rrs_neurons_path=sprintf('/Data/2007-03-27-1/data%03d-from-data011-nwpca/data%03d-from-data011-nwpca.neurons', run_opt.data_run, run_opt.data_run);
@@ -44,7 +48,8 @@ end
 
 if run_opt.raster || run_opt.trial_raster || ...
         run_opt.trial_raster_shift || run_opt.manual_speed_tuning || ...
-        run_opt.auto_speed_tuning || run_opt.pop_speed_tuning
+        run_opt.auto_speed_tuning || run_opt.pop_speed_tuning || ...
+        run_opt.trial_estimate
     clf; set(gcf, 'color', 'white');
     
     cell_indices1=get_cell_indices(datarun{1},{run_opt.cell_type});
@@ -224,4 +229,25 @@ if run_opt.pop_speed_tuning
     if run_opt.savefig
         saveas(gcf, sprintf('figs/%s_data_run_%d_config_%d_trial_%d.png', run_opt.cell_type, run_opt.data_run, run_opt.config_num, run_opt.trial_num))
     end
+end
+
+if run_opt.trial_estimate
+    if matlabpool('size') <= 0
+        matlabpool
+    end
+    options = optimset('Display', 'iter', 'TolFun', 1, 'MaxFunEvals', 30, 'LargeScale', 'off');
+    estimates = zeros(size(tr));
+    parfor i = 1:length(tr)
+        estimates(i) = fminunc(@(v) -pop_motion_signal(v, datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(i), stop, run_opt.tau), run_opt.trial_estimate_start, options);
+        display(estimates(i))
+    end
+    figure()
+    hist(estimates)
+    xlabel('speed estimate (stixels/sec)')
+    ylabel('trials')
+    title(sprintf('%s data run %d config %d', run_opt.cell_type, run_opt.data_run, run_opt.config_num))
+    if run_opt.savefig
+        saveas(gcf, sprintf('figs/%s_data_run_%d_config_%d.png', run_opt.cell_type, run_opt.data_run, run_opt.config_num))
+    end
+    matlabpool close
 end
