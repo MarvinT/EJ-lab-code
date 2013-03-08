@@ -20,8 +20,22 @@ run_opt.tau = .01; % tuning parameter
 run_opt.pop_speed_tuning = false; % T/F
 run_opt.savefig = true; % T/F
 run_opt.trial_num = 1; % > 0
-run_opt.trial_estimate = true; % T/F
+run_opt.trial_estimate = false; % T/F
+run_opt.auto_set = true; % T/F -- note: modifies run_opt
 run_opt.trial_estimate_start = 120;
+run_opt.data_run_plots = true; % T/F
+
+if run_opt.auto_set
+    if run_opt.data_run == 17
+        run_opt.velocity_lim = 50;
+        run_opt.config_num = 2;
+        run_opt.trial_estimate_start = 14.6;
+    elseif run_opt.data_run == 18
+        run_opt.velocity_lim = 150;
+        run_opt.config_num = 1;
+        run_opt.trial_estimate_start = 110;
+    end
+end
 
 if exist('export_fig', 'file') == 7
     addpath export_fig
@@ -48,6 +62,8 @@ if run_opt.load %load data
 
     datarun{2}=load_stim(datarun{2},'correction_incomplet_run', 0); 
 end
+
+tic;
 
 if run_opt.raster || run_opt.trial_raster || ...
         run_opt.trial_raster_shift || run_opt.manual_speed_tuning || ...
@@ -256,5 +272,40 @@ if run_opt.trial_estimate
         export_fig(sprintf('figs/%s_data_run_%d_config_%d', run_opt.cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300', '-painters')
     end
 end
+
+if run_opt.data_run_plots
+    if matlabpool('size') <= 0
+        matlabpool
+    end
+    options = optimset('Display', 'iter', 'TolFun', 1e-2, 'MaxFunEvals', 30, 'LargeScale', 'off');
+    cell_types = {'Off midget', 'Off parasol', 'On midget', 'On parasol'};
+    for j=1:length(cell_types)
+        cell_type = cell_types{j};
+        cell_indices1=get_cell_indices(datarun{1},{cell_type});
+        cell_indices2=get_cell_indices(datarun{2},{cell_type});
+        
+        cell_x_pos = cellfun( @(X) X.mean(1), datarun{1}.vision.sta_fits);
+        [~, cell_sort_idx] = sort(cell_x_pos(cell_indices1));
+        
+        cell_indices1 = cell_indices1(cell_sort_idx);
+        cell_indices2 = cell_indices2(cell_sort_idx);
+        
+        estimates = zeros(size(tr));
+        parfor i = 1:length(tr)
+            estimates(i) = fminunc(@(v) -pop_motion_signal(v, datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(i), stop, run_opt.tau), run_opt.trial_estimate_start, options);
+            display(estimates(i))
+        end
+        figure()
+        hist(estimates)
+        xlabel('speed estimate (stixels/sec)')
+        ylabel('trials')
+        title(sprintf('%s data run %d config %d', cell_type, run_opt.data_run, run_opt.config_num))
+        if run_opt.savefig
+            export_fig(sprintf('figs/%s_data_run_%d_config_%d', cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300', '-painters')
+        end
+    end
+end
+
+toc
 
 matlabpool close
