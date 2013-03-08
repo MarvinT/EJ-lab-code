@@ -230,7 +230,7 @@ if run_opt.pop_speed_tuning
     ylabel('net rightward motion signal')
     title(sprintf('motion signal strength  in trial number %d', run_opt.trial_num))
     if run_opt.savefig
-        saveas(gcf, sprintf('figs/%s_data_run_%d_config_%d_trial_%d.png', run_opt.cell_type, run_opt.data_run, run_opt.config_num, run_opt.trial_num))
+        export_fig(sprintf('figs/%s_data_run_%d_config_%d_trial_%d', run_opt.cell_type, run_opt.data_run, run_opt.config_num, run_opt.trial_num), '-png', '-r300')
     end
 end
 
@@ -250,7 +250,7 @@ if run_opt.trial_estimate
     ylabel('trials')
     title(sprintf('%s data run %d config %d', run_opt.cell_type, run_opt.data_run, run_opt.config_num))
     if run_opt.savefig
-        saveas(gcf, sprintf('figs/%s_data_run_%d_config_%d.png', run_opt.cell_type, run_opt.data_run, run_opt.config_num))
+        export_fig(sprintf('figs/%s_data_run_%d_config_%d', run_opt.cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300')
     end
     matlabpool close
 end
