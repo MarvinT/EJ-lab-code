@@ -7,7 +7,7 @@
 % vary the options set in run_opt to turn different behavior on and off
 run_opt.load = true; % T/F
 run_opt.remote = true; % T/F
-run_opt.data_run = 18; % 12-19
+run_opt.data_run = 19; % 12-19
 run_opt.cell_type = 'Off parasol'; % on/off parasol, on/off midget
 run_opt.config_num = 1; % 1-4
 run_opt.raster = false; % T/F
@@ -31,10 +31,17 @@ if run_opt.auto_set
         run_opt.velocity_lim = 50;
         run_opt.config_num = 2;
         run_opt.trial_estimate_start = 14.6;
+        run_opt.tol = 1e-2;
     elseif run_opt.data_run == 18
         run_opt.velocity_lim = 150;
         run_opt.config_num = 1;
         run_opt.trial_estimate_start = 110;
+        run_opt.tol = 1e-3;
+    elseif run_opt.data_run == 19
+        run_opt.velocity_lim = 300;
+        run_opt.config_num = 1;
+        run_opt.trial_estimate_start = 203;
+        run_opt.tol = 1e-4;
     end
 end
 
