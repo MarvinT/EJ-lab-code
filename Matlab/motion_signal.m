@@ -33,5 +33,5 @@ flt_rsp1_shifted = filtered_response(spks_1_shifted, tau);
 flt_rsp2_shifted = filtered_response(spks_2_shifted, tau);
 % and return the integral
 str = integral(@(t) flt_rsp1(t) .* flt_rsp2_shifted(t) - flt_rsp2(t) .* flt_rsp1_shifted(t), 0, trial_length, ...
-    'AbsTol', 1e-1, 'RelTol', 1e-2);
+    'AbsTol', 1e-2, 'RelTol', 1e-3);
 end

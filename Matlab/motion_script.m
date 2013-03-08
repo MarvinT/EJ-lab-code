@@ -215,11 +215,14 @@ if run_opt.auto_speed_tuning
 end
 
 if run_opt.pop_speed_tuning
+    if matlabpool('size') <= 0
+        matlabpool
+    end
     
     v = linspace(1, run_opt.velocity_lim, 50);
     
     sig_str = zeros(size(v));
-    for i = 1:length(v)
+    parfor i = 1:length(v)
         sig_str(i) = pop_motion_signal(v(i), datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(run_opt.trial_num), stop, run_opt.tau);
         
         fprintf('*')
@@ -230,7 +233,7 @@ if run_opt.pop_speed_tuning
     ylabel('net rightward motion signal')
     title(sprintf('motion signal strength  in trial number %d', run_opt.trial_num))
     if run_opt.savefig
-        export_fig(sprintf('figs/%s_data_run_%d_config_%d_trial_%d', run_opt.cell_type, run_opt.data_run, run_opt.config_num, run_opt.trial_num), '-png', '-r300')
+        export_fig(sprintf('figs/%s_data_run_%d_config_%d_trial_%d', run_opt.cell_type, run_opt.data_run, run_opt.config_num, run_opt.trial_num), '-png', '-r300', '-painters')
     end
 end
 
@@ -238,7 +241,7 @@ if run_opt.trial_estimate
     if matlabpool('size') <= 0
         matlabpool
     end
-    options = optimset('Display', 'iter', 'TolFun', 1e-1, 'MaxFunEvals', 30, 'LargeScale', 'off');
+    options = optimset('Display', 'iter', 'TolFun', 1e-2, 'MaxFunEvals', 30, 'LargeScale', 'off');
     estimates = zeros(size(tr));
     parfor i = 1:length(tr)
         estimates(i) = fminunc(@(v) -pop_motion_signal(v, datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(i), stop, run_opt.tau), run_opt.trial_estimate_start, options);
@@ -250,7 +253,8 @@ if run_opt.trial_estimate
     ylabel('trials')
     title(sprintf('%s data run %d config %d', run_opt.cell_type, run_opt.data_run, run_opt.config_num))
     if run_opt.savefig
-        export_fig(sprintf('figs/%s_data_run_%d_config_%d', run_opt.cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300')
+        export_fig(sprintf('figs/%s_data_run_%d_config_%d', run_opt.cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300', '-painters')
     end
-    matlabpool close
 end
+
+matlabpool close
