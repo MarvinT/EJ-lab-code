@@ -23,6 +23,9 @@ run_opt.trial_num = 1; % > 0
 run_opt.trial_estimate = true; % T/F
 run_opt.trial_estimate_start = 120;
 
+if exist('export_fig', 'file') == 7
+    addpath export_fig
+end
 
 if run_opt.load %load data
 
