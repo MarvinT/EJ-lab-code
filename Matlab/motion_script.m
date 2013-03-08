@@ -8,7 +8,7 @@
 run_opt.load = true; % T/F
 run_opt.remote = true; % T/F
 run_opt.data_run = 18; % 12-19
-run_opt.cell_type = 'Off midget'; % on/off parasol, on/off midget
+run_opt.cell_type = 'Off parasol'; % on/off parasol, on/off midget
 run_opt.config_num = 1; % 1-4
 run_opt.raster = false; % T/F
 run_opt.trial_raster = false; % T/F
@@ -18,6 +18,7 @@ run_opt.velocity_lim = 150; % >0
 run_opt.auto_speed_tuning = false; % T/F
 run_opt.tau = .01; % tuning parameter
 run_opt.pop_speed_tuning = false; % T/F
+run_opt.tol = 1e-3;
 run_opt.savefig = true; % T/F
 run_opt.trial_num = 1; % > 0
 run_opt.trial_estimate = false; % T/F
@@ -239,7 +240,7 @@ if run_opt.pop_speed_tuning
     
     sig_str = zeros(size(v));
     parfor i = 1:length(v)
-        sig_str(i) = pop_motion_signal(v(i), datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(run_opt.trial_num), stop, run_opt.tau);
+        sig_str(i) = pop_motion_signal(v(i), datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(run_opt.trial_num), stop, run_opt.tau, run_opt.tol*.1);
         
         fprintf('*')
     end
@@ -257,10 +258,10 @@ if run_opt.trial_estimate
     if matlabpool('size') <= 0
         matlabpool
     end
-    options = optimset('Display', 'iter', 'TolFun', 1e-2, 'MaxFunEvals', 30, 'LargeScale', 'off');
+    options = optimset('Display', 'iter', 'TolFun', run_opt.tol , 'MaxFunEvals', 30, 'LargeScale', 'off');
     estimates = zeros(size(tr));
     parfor i = 1:length(tr)
-        estimates(i) = fminunc(@(v) -pop_motion_signal(v, datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(i), stop, run_opt.tau), run_opt.trial_estimate_start, options);
+        estimates(i) = fminunc(@(v) -pop_motion_signal(v, datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(i), stop, run_opt.tau, run_opt.tol), run_opt.trial_estimate_start, options);
         display(estimates(i))
     end
     figure()
@@ -277,7 +278,7 @@ if run_opt.data_run_plots
     if matlabpool('size') <= 0
         matlabpool
     end
-    options = optimset('Display', 'iter', 'TolFun', 1e-2, 'MaxFunEvals', 30, 'LargeScale', 'off');
+    options = optimset('Display', 'iter', 'TolFun', run_opt.tol, 'MaxFunEvals', 30, 'LargeScale', 'off');
     cell_types = {'Off midget', 'Off parasol', 'On midget', 'On parasol'};
     for j=1:length(cell_types)
         cell_type = cell_types{j};
@@ -292,7 +293,7 @@ if run_opt.data_run_plots
         
         estimates = zeros(size(tr));
         parfor i = 1:length(tr)
-            estimates(i) = fminunc(@(v) -pop_motion_signal(v, datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(i), stop, run_opt.tau), run_opt.trial_estimate_start, options);
+            estimates(i) = fminunc(@(v) -pop_motion_signal(v, datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(i), stop, run_opt.tau, run_opt.tol), run_opt.trial_estimate_start, options);
             display(estimates(i))
         end
         figure()

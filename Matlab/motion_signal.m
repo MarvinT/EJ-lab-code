@@ -1,4 +1,12 @@
-function [str, flt_rsp1, flt_rsp2, flt_rsp1_shifted, flt_rsp2_shifted, spks_1_shifted, spks_2_shifted] = motion_signal(velocity, spks_1, spks_2, dx, trigger, trial_length, tau)
+function [str, flt_rsp1, flt_rsp2, flt_rsp1_shifted, flt_rsp2_shifted, spks_1_shifted, spks_2_shifted] = motion_signal(velocity, spks_1, spks_2, dx, trigger, trial_length, tau, tol)
+if nargin < 8
+    AbsTol = 1e-4;
+    RelTol = 1e-3;
+else
+    RelTol = tol;
+    AbsTol = tol * .1;
+end
+
 % trial start @ t=0
 spks_1 = spks_1 - trigger;
 spks_2 = spks_2 - trigger;
@@ -33,5 +41,5 @@ flt_rsp1_shifted = filtered_response(spks_1_shifted, tau);
 flt_rsp2_shifted = filtered_response(spks_2_shifted, tau);
 % and return the integral
 str = integral(@(t) flt_rsp1(t) .* flt_rsp2_shifted(t) - flt_rsp2(t) .* flt_rsp1_shifted(t), 0, trial_length, ...
-    'AbsTol', 1e-2, 'RelTol', 1e-3);
+    'AbsTol', AbsTol, 'RelTol', RelTol);
 end
