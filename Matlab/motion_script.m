@@ -269,7 +269,7 @@ if run_opt.trial_estimate
     estimates = zeros(size(tr));
     parfor i = 1:length(tr)
         estimates(i) = fminunc(@(v) -pop_motion_signal(v, datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(i), stop, run_opt.tau, run_opt.tol), run_opt.trial_estimate_start, options);
-        display(estimates(i))
+        fprintf('for trial %d, the estimated speed was %d', i, estimates(i))
     end
     figure()
     hist(estimates)
@@ -301,7 +301,7 @@ if run_opt.data_run_plots
         estimates = zeros(size(tr));
         parfor i = 1:length(tr)
             estimates(i) = fminunc(@(v) -pop_motion_signal(v, datarun{2}.spikes, cell_indices1, cell_indices2, cell_x_pos, tr(i), stop, run_opt.tau, run_opt.tol), run_opt.trial_estimate_start, options);
-            display(estimates(i))
+            fprintf('for %s cells, in trial %d, the estimated speed was %d', cell_type, i, estimates(i))
         end
         figure()
         hist(estimates)
