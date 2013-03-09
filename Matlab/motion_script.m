@@ -51,7 +51,7 @@ end
 
 if run_opt.load %load data
 
-    clear
+    clear datarun tr
 
     if run_opt.remote 
         datarun{1}.names.rrs_params_path='/snle/analysis/2007-03-27-1/data011-nwpca/data011-nwpca.params';
