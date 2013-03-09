@@ -51,7 +51,7 @@ end
 
 if run_opt.load %load data
 
-    clear datarun 
+    clear
 
     if run_opt.remote 
         datarun{1}.names.rrs_params_path='/snle/analysis/2007-03-27-1/data011-nwpca/data011-nwpca.params';
@@ -76,7 +76,7 @@ tic;
 if run_opt.raster || run_opt.trial_raster || ...
         run_opt.trial_raster_shift || run_opt.manual_speed_tuning || ...
         run_opt.auto_speed_tuning || run_opt.pop_speed_tuning || ...
-        run_opt.trial_estimate
+        run_opt.trial_estimate || run_opt.data_run_plots
     clf; set(gcf, 'color', 'white');
     
     cell_indices1=get_cell_indices(datarun{1},{run_opt.cell_type});
