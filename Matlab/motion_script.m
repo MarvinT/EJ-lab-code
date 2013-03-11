@@ -7,7 +7,7 @@
 % vary the options set in run_opt to turn different behavior on and off
 run_opt.load = true; % T/F
 run_opt.remote = true; % T/F
-run_opt.data_run = 19; % 12-19
+run_opt.data_run = 14; % 12-19
 run_opt.cell_type = 'Off parasol'; % on/off parasol, on/off midget
 run_opt.config_num = 1; % 1-4
 run_opt.raster = false; % T/F
@@ -27,7 +27,12 @@ run_opt.trial_estimate_start = 120;
 run_opt.data_run_plots = true; % T/F
 
 if run_opt.auto_set
-    if run_opt.data_run == 17
+    if run_opt.data_run == 14
+        run_opt.velocity_lim = 50;
+        run_opt.config_num = 1;
+        run_opt.trial_estimate_start = 14.6;
+        run_opt.tol = 1e-2;
+    elseif run_opt.data_run == 17
         run_opt.velocity_lim = 50;
         run_opt.config_num = 2;
         run_opt.trial_estimate_start = 14.6;
@@ -279,6 +284,7 @@ if run_opt.trial_estimate
     if run_opt.savefig
         export_fig(sprintf('figs/%s_data_run_%d_config_%d', run_opt.cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300', '-painters')
     end
+    save(sprintf('data/%s_data_run_%d_config_%d.mat', cell_type, run_opt.data_run, run_opt.config_num), estimates)
 end
 
 if run_opt.data_run_plots
@@ -311,6 +317,7 @@ if run_opt.data_run_plots
         if run_opt.savefig
             export_fig(sprintf('figs/%s_data_run_%d_config_%d', cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300', '-painters')
         end
+        save(sprintf('data/%s_data_run_%d_config_%d.mat', cell_type, run_opt.data_run, run_opt.config_num), estimates)
     end
 end
 
