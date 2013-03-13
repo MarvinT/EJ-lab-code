@@ -284,7 +284,7 @@ if run_opt.trial_estimate
     if run_opt.savefig
         export_fig(sprintf('figs/%s_data_run_%d_config_%d', run_opt.cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300', '-painters')
     end
-    save(sprintf('data/%s_data_run_%d_config_%d.mat', cell_type, run_opt.data_run, run_opt.config_num), estimates)
+    save(sprintf('data/%s_data_run_%d_config_%d.mat', cell_type, run_opt.data_run, run_opt.config_num), 'estimates')
 end
 
 if run_opt.data_run_plots
@@ -317,7 +317,7 @@ if run_opt.data_run_plots
         if run_opt.savefig
             export_fig(sprintf('figs/%s_data_run_%d_config_%d', cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300', '-painters')
         end
-        save(sprintf('data/%s_data_run_%d_config_%d.mat', cell_type, run_opt.data_run, run_opt.config_num), estimates)
+        save(sprintf('data/%s_data_run_%d_config_%d.mat', cell_type, run_opt.data_run, run_opt.config_num), 'estimates')
     end
 end
 
