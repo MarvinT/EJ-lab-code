@@ -1,10 +1,60 @@
+% Script to calculate motion signals across different cell populations
 % This script calculates the motion signals for a data run displays several
-% nice guis for visualization.
+% nice guis for visualization.  Can set lots of options for different
+% behavior. 
+%
+% uses data at /snle/analysis/2007-03-27-1/ but could be modified to use
+% other data
+%
 % Marvin Thielk 2013
 % mthielk@salk.edu
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% vary the options set in run_opt to turn different behaviors on and off
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% load -> reloads data
+% remote -> if true uses data on the network, otherwise, local data
+% data_run -> which data run to load and analyze
+% cell_type -> string indicating which of the 4 cell populations to look at
+% config_num -> which configuration of the stimuli to use (out of 4)
+% raster -> creates a plot where you can vary the cell number and see a
+%           raster for all the trials to demonstrate the reliability of
+%           signals
+% trial_raster -> creates a plot where you can vary the trial number and
+%                 see all the spiking cells arranged by x position of their
+%                 receptive field
+% trial_raster_shift -> creates a plot where you can vary the trial number
+%                       and manually shift the cells spike timing to see
+%                       them line up.
+% manual_speed_tuning -> creates a plot that demonstrates the algorithm and
+%                        allows you see the gaussians line up as you vary
+%                        the velocity.  This is for pairwise motion signal.
+% velocity_lim -> max velocity that auto_speed_tuning automatically
+%                 calculates
+% auto_speed_tuning -> for a pair of neurons calculates the motion signal
+%                      at different velocities and plots it.  Useful to
+%                      show the pairwise shape of the speed tuning cuve
+% tau -> tuning parameter that dictates the width of the gaussians used
+% pop_speed_tuning -> plots the tuning curve summed over all possible pairs
+%                     of neurons. Parallelized.
+% tol -> determines the various tolerances for the integration and
+%        optimizations used.
+% savefig -> if true the script tries to save the figures that take longer
+%            to produce in a figs/ folder.  The folder must already exist
+%            or it will throw an error.
+% trial_num -> Which trial to use for pop_speed_tuning.  
+%                   0 < trial_num <= ~50
+% trial_estimate -> creates a histogram of the fminunc determined velocity
+%                   estimate of all the trials.  Parallelized.
+% auto_set -> automatically sets a few of the parameters that I know work
+%             best for different data runs.  CAUTION: this overwrites
+%             values in run_opt.
+% trial_estimate_start -> the velocity to use as the initial guess in
+%                         fminunc to estimate the velocity.
+% data_run_plots -> same as trial_estimate but does it for each of the four
+%                   cell types
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% vary the options set in run_opt to turn different behavior on and off
 run_opt.load = true; % T/F
 run_opt.remote = true; % T/F
 run_opt.data_run = 14; % 12-19
@@ -22,10 +72,12 @@ run_opt.tol = 1e-3;
 run_opt.savefig = true; % T/F
 run_opt.trial_num = 1; % > 0
 run_opt.trial_estimate = false; % T/F
-run_opt.auto_set = true; % T/F -- note: modifies run_opt
+run_opt.auto_set = true; % T/F -- note: overwrites run_opt params
 run_opt.trial_estimate_start = 120;
 run_opt.data_run_plots = true; % T/F
 
+% just some presets so I don't have to change every param each time I
+% change the data_run
 if run_opt.auto_set
     if run_opt.data_run == 14
         run_opt.velocity_lim = 50;
@@ -50,11 +102,12 @@ if run_opt.auto_set
     end
 end
 
+% makes sure export_fig is on the path
 if exist('export_fig', 'file') == 7
     addpath export_fig
 end
 
-if run_opt.load %load data
+if run_opt.load % load data fresh
 
     clear datarun tr
 
