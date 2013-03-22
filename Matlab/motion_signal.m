@@ -8,7 +8,7 @@ function [str, flt_rsp1, flt_rsp2, flt_rsp1_shifted, flt_rsp2_shifted, spks_1_sh
 %       trigger -> the start time for the trial you are using
 %       trial_length -> length of the trial
 %       tau -> the tuning parameter to use.  The width of the gaussians in
-%              the motion signal algorithm
+%              the filtered response algorithm
 %
 %   str = MOTION_SIGNAL(..., tol)
 %   same as above with:

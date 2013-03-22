@@ -19,7 +19,7 @@ function sig_str = pop_motion_signal(velocity, spikes, indices1, indices2, x_pos
 %       trigger ->the start time for the trial you are using
 %       trial_length -> length of the trial
 %       tau -> the tuning parameter to use.  The width of the gaussians in
-%              the motion signal algorithm
+%              the filtered response algorithm
 %
 %   sig_str = POP_MOTION_SIGNAL(..., tol)
 %   same as above with:
