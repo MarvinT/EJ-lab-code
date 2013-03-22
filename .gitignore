@@ -3,6 +3,7 @@
 *.sh~
 scripts.sh
 Matlab/figs/*
+Matlab/data/*
 Matlab/.DS_Store
 .DS_Store
 
