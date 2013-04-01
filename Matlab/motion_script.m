@@ -3,9 +3,6 @@
 % nice guis for visualization.  Can set lots of options for different
 % behavior. 
 %
-% uses data at /snle/analysis/2007-03-27-1/ but could be modified to use
-% other data
-%
 % Marvin Thielk 2013
 % mthielk@salk.edu
 
@@ -42,8 +39,8 @@
 % tol -> determines the various tolerances for the integration and
 %        optimizations used.
 % savefig -> if true the script tries to save the figures that take longer
-%            to produce in a figs/ folder.  The folder must already exist
-%            or it will throw an error.
+%            to produce in a figs/data_set folder.  The folder must already
+%            exist or it will throw an error.
 % trial_num -> Which trial to use for pop_speed_tuning.  
 %                   0 < trial_num <= ~50
 % trial_estimate -> creates a histogram of the fminunc determined velocity
@@ -62,7 +59,7 @@ run_opt.load = true; % T/F
 % run_opt.data_set = '2007-03-27-1';
 run_opt.data_set = '2007-08-24-4';
 run_opt.remote = true; % T/F
-run_opt.data_run = 2; % 12-19
+run_opt.data_run = 3; % 12-19
 run_opt.cell_type = 'On parasol'; % on/off parasol, on/off midget
 run_opt.config_num = 1; % 1-4
 run_opt.raster = false; % T/F
@@ -409,7 +406,7 @@ if run_opt.pop_speed_tuning
     ylabel('net rightward motion signal')
     title(sprintf('motion signal strength  in trial number %d', run_opt.trial_num))
     if run_opt.savefig
-        export_fig(sprintf('figs/%s_data_run_%d_config_%d_trial_%d', run_opt.cell_type, run_opt.data_run, run_opt.config_num, run_opt.trial_num), '-png', '-r300', '-painters')
+        export_fig(sprintf('figs/%s/%s_data_run_%02d_config_%d_trial_%d', run_opt.data_set, run_opt.cell_type, run_opt.data_run, run_opt.config_num, run_opt.trial_num), '-png', '-r300', '-painters')
     end
 end
 
@@ -429,9 +426,9 @@ if run_opt.trial_estimate
     ylabel('trials')
     title(sprintf('%s data run %d config %d', run_opt.cell_type, run_opt.data_run, run_opt.config_num))
     if run_opt.savefig
-        export_fig(sprintf('figs/%s_data_run_%d_config_%d', run_opt.cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300', '-painters')
+        export_fig(sprintf('figs/%s/%s_data_run_%02d_config_%d', run_opt.data_set, run_opt.cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300', '-painters')
     end
-    save(sprintf('data/%s_data_run_%d_config_%d.mat', run_opt.cell_type, run_opt.data_run, run_opt.config_num), 'estimates')
+    save(sprintf('data/%s/%s_data_run_%02d_config_%d.mat', run_opt.data_set, run_opt.cell_type, run_opt.data_run, run_opt.config_num), 'estimates')
 end
 
 if run_opt.data_run_plots
@@ -461,9 +458,9 @@ if run_opt.data_run_plots
         ylabel('trials')
         title(sprintf('%s data run %d config %d', cell_type, run_opt.data_run, run_opt.config_num))
         if run_opt.savefig
-            export_fig(sprintf('figs/%s_data_run_%d_config_%d', cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300', '-painters')
+            export_fig(sprintf('figs/%s/%s_data_run_%02d_config_%d', run_opt.data_set, cell_type, run_opt.data_run, run_opt.config_num), '-png', '-r300', '-painters')
         end
-        save(sprintf('data/%s_data_run_%d_config_%d.mat', cell_type, run_opt.data_run, run_opt.config_num), 'estimates')
+        save(sprintf('data/%s/%s_data_run_%02d_config_%d.mat', run_opt.data_set, cell_type, run_opt.data_run, run_opt.config_num), 'estimates')
     end
 end
 
