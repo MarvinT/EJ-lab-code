@@ -57,8 +57,8 @@
 
 run_opt.load = true; % T/F
 run_opt.remote = true; % T/F
-run_opt.data_run = 14; % 12-19
-run_opt.cell_type = 'Off parasol'; % on/off parasol, on/off midget
+run_opt.data_run = 13; % 12-19
+run_opt.cell_type = 'On parasol'; % on/off parasol, on/off midget
 run_opt.config_num = 1; % 1-4
 run_opt.raster = false; % T/F
 run_opt.trial_raster = false; % T/F
@@ -79,11 +79,31 @@ run_opt.data_run_plots = true; % T/F
 % just some presets so I don't have to change every param each time I
 % change the data_run
 if run_opt.auto_set
-    if run_opt.data_run == 14
+    if run_opt.data_run == 12
+        run_opt.velocity_lim = 150;
+        run_opt.config_num = 1;
+        run_opt.trial_estimate_start = 110;
+        run_opt.tol = 1e-3;
+    elseif run_opt.data_run == 13
+        run_opt.velocity_lim = 300;
+        run_opt.config_num = 1;
+        run_opt.trial_estimate_start = 203;
+        run_opt.tol = 1e-4;
+    elseif run_opt.data_run == 14
         run_opt.velocity_lim = 50;
         run_opt.config_num = 1;
         run_opt.trial_estimate_start = 14.6;
         run_opt.tol = 1e-2;
+    elseif run_opt.data_run == 15
+        run_opt.velocity_lim = 150;
+        run_opt.config_num = 3;
+        run_opt.trial_estimate_start = 110;
+        run_opt.tol = 1e-3;
+    elseif run_opt.data_run == 16
+        run_opt.velocity_lim = 300;
+        run_opt.config_num = 1;
+        run_opt.trial_estimate_start = 203;
+        run_opt.tol = 1e-4;
     elseif run_opt.data_run == 17
         run_opt.velocity_lim = 50;
         run_opt.config_num = 2;
