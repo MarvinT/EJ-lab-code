@@ -7,7 +7,7 @@ filename = "scripts.sh"
 
 download_analyze = False;
 
-transfer_set = 1
+transfer_set = 2
 
 if transfer_set == 1:
 	date = "2007-03-27-1"
@@ -16,8 +16,8 @@ if transfer_set == 1:
 	mapped = '12-19'
 elif transfer_set == 2:
 	date = "2007-08-24-4"
-	templates = '0, 1, 12, 13'
-	movie_specs = ["RGB-10-8-0.48-11111", "RGB-10-8-0.48-11111", "RGB-10-8-0.48-11111", "RGB-10-8-0.48-22222"]
+	templates = '1, 12, 13'
+	movie_specs = ["RGB-10-8-0.48-11111", "RGB-10-8-0.48-11111", "RGB-10-8-0.48-22222"]
 	mapped = '2-11, 14'
 elif transfer_set == 3:
 	date = '2008-04-08-0'
